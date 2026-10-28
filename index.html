@@ -1,0 +1,245 @@
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Моё расписание</title>
+    <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f1115">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0f1115;
+      color: #f2f3f5;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px;
+      color-scheme: dark;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    header p {
+      color: #8b93a1;
+      margin-top: 4px;
+    }
+
+    .add-box {
+      background: #1a1d24;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .add-box input {
+      width: 100%;
+      background: #0f1115;
+      color: #f2f3f5;
+      border: 1px solid #2a2e38;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .add-box input:focus {
+      outline: none;
+      border-color: #6c8cff;
+    }
+
+    .add-box button {
+      width: 100%;
+      background: #6c8cff;
+      color: #0f1115;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #1a1d24;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #6c8cff;
+    }
+
+    .card.green { border-left-color: #4cd69b; }
+    .card.pink  { border-left-color: #ff7eb6; }
+
+    .time {
+      font-size: 15px;
+      font-weight: 600;
+      color: #6c8cff;
+      min-width: 56px;
+    }
+
+    .card.green .time { color: #4cd69b; }
+    .card.pink .time  { color: #ff7eb6; }
+
+    .info {
+      flex: 1;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #8b93a1;
+      margin-top: 2px;
+    }
+
+    .delete {
+      background: none;
+      border: none;
+      color: #8b93a1;
+      font-size: 22px;
+      padding: 4px 8px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #8b93a1;
+      padding: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Моё расписание</h1>
+      <p>Сегодня</p>
+    </header>
+
+    <div class="add-box">
+      <input type="time" id="timeInput" value="09:00">
+      <input type="text" id="titleInput" placeholder="Название (например, Математика)">
+      <input type="text" id="noteInput" placeholder="Заметка (необязательно)">
+      <button onclick="addLesson()">Добавить занятие</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <script>
+    // Занятия, которые показываются при самом первом запуске
+    const defaultLessons = [
+      { time: "09:00", title: "Математика", note: "Аудитория 204" },
+      { time: "11:30", title: "Английский язык", note: "Онлайн" },
+      { time: "18:00", title: "Тренировка", note: "Спортзал" }
+    ];
+
+    // Загружает сохранённый список из памяти браузера
+    function loadLessons() {
+      try {
+        const saved = localStorage.getItem("lessons");
+        if (saved !== null) {
+          return JSON.parse(saved);
+        }
+      } catch (e) {
+        // если память недоступна, просто покажем стандартный список
+      }
+      return defaultLessons;
+    }
+
+    // Сохраняет список в память браузера
+    function saveLessons() {
+      try {
+        localStorage.setItem("lessons", JSON.stringify(lessons));
+      } catch (e) {
+        // если сохранить не получилось, приложение всё равно работает
+      }
+    }
+
+    // Защита: превращает опасные символы в обычный текст
+    function safe(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    let lessons = loadLessons();
+
+    const colors = ["", "green", "pink"];
+
+    function render() {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+
+      lessons.sort(function (a, b) {
+        return a.time.localeCompare(b.time);
+      });
+
+      if (lessons.length === 0) {
+        list.innerHTML = '<div class="empty">Занятий пока нет</div>';
+        return;
+      }
+
+      lessons.forEach(function (lesson, i) {
+        list.innerHTML +=
+          '<div class="card ' + colors[i % 3] + '">' +
+            '<div class="time">' + safe(lesson.time) + '</div>' +
+            '<div class="info">' +
+              '<div class="title">' + safe(lesson.title) + '</div>' +
+              '<div class="note">' + safe(lesson.note) + '</div>' +
+            '</div>' +
+            '<button class="delete" onclick="removeLesson(' + i + ')">✕</button>' +
+          '</div>';
+      });
+    }
+
+    function addLesson() {
+      const time = document.getElementById("timeInput").value;
+      const title = document.getElementById("titleInput").value.trim();
+      const note = document.getElementById("noteInput").value.trim();
+
+      if (time === "" || title === "") {
+        alert("Укажите время и название");
+        return;
+      }
+
+      lessons.push({ time: time, title: title, note: note });
+      saveLessons();
+
+      document.getElementById("titleInput").value = "";
+      document.getElementById("noteInput").value = "";
+      render();
+    }
+
+    function removeLesson(index) {
+      lessons.splice(index, 1);
+      saveLessons();
+      render();
+    }
+
+    render();
+        if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+        }
+  </script>
+</body>
+</html>
