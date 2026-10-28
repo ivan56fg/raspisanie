@@ -1,16 +1,13 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Моё расписание</title>
-    <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f1115">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: #0f1115;
@@ -21,59 +18,59 @@
       color-scheme: dark;
     }
 
-    .app {
-      max-width: 480px;
-      margin: 0 auto;
-    }
+    .app { max-width: 480px; margin: 0 auto; }
 
-    header {
+    header { margin-bottom: 16px; }
+    header h1 { font-size: 28px; font-weight: 700; }
+    header p { color: #8b93a1; margin-top: 4px; }
+
+    /* Плашка «До звонка» */
+    .banner {
+      background: linear-gradient(135deg, #263060, #1a1d24);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .b-label { font-size: 14px; color: #a9b6ff; text-transform: uppercase; letter-spacing: 0.5px; }
+    .b-big { font-size: 38px; font-weight: 800; margin: 6px 0 10px; }
+    .b-sub { font-size: 16px; font-weight: 600; }
+    .b-sub2 { font-size: 14px; color: #8b93a1; margin-top: 4px; }
+
+    /* Уведомления */
+    .notif {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: #8b93a1;
+      font-size: 14px;
       margin-bottom: 20px;
     }
-
-    header h1 {
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    header p {
-      color: #8b93a1;
-      margin-top: 4px;
-    }
-
-    .add-box {
+    .notif button, .notif select {
       background: #1a1d24;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-
-    .add-box input {
-      width: 100%;
-      background: #0f1115;
       color: #f2f3f5;
       border: 1px solid #2a2e38;
       border-radius: 10px;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
     }
 
-    .add-box input:focus {
-      outline: none;
-      border-color: #6c8cff;
-    }
-
-    .add-box button {
-      width: 100%;
-      background: #6c8cff;
-      color: #0f1115;
-      border: none;
+    /* Вкладки дней */
+    .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+    .tab {
+      flex: 1;
+      background: #1a1d24;
+      color: #8b93a1;
+      border: 1px solid transparent;
       border-radius: 10px;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: 700;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
     }
+    .tab.today { border-color: #6c8cff; }
+    .tab.active { background: #6c8cff; color: #0f1115; }
 
+    /* Карточки */
     .card {
       display: flex;
       align-items: center;
@@ -84,47 +81,49 @@
       margin-bottom: 12px;
       border-left: 4px solid #6c8cff;
     }
-
     .card.green { border-left-color: #4cd69b; }
     .card.pink  { border-left-color: #ff7eb6; }
+    .card.now   { background: #232a4d; }
 
-    .time {
-      font-size: 15px;
-      font-weight: 600;
-      color: #6c8cff;
-      min-width: 56px;
-    }
-
+    .time { min-width: 56px; text-align: center; color: #6c8cff; }
     .card.green .time { color: #4cd69b; }
     .card.pink .time  { color: #ff7eb6; }
+    .t1 { font-size: 17px; font-weight: 700; }
+    .t2 { font-size: 13px; color: #8b93a1; margin-top: 2px; }
 
-    .info {
-      flex: 1;
+    .info { flex: 1; }
+    .title { font-size: 17px; font-weight: 600; }
+    .note { font-size: 14px; color: #8b93a1; margin-top: 2px; }
+
+    .delete { background: none; border: none; color: #8b93a1; font-size: 22px; padding: 4px 8px; }
+    .empty { text-align: center; color: #8b93a1; padding: 24px 0; }
+
+    /* Форма добавления */
+    .add-box { background: #1a1d24; border-radius: 16px; padding: 16px; margin-top: 24px; }
+    .add-box h2 { font-size: 18px; margin-bottom: 12px; }
+    .row { display: flex; gap: 10px; }
+    .row > div { flex: 1; }
+    .add-box label { display: block; font-size: 13px; color: #8b93a1; margin-bottom: 4px; }
+    .add-box input, .add-box select {
+      width: 100%;
+      background: #0f1115;
+      color: #f2f3f5;
+      border: 1px solid #2a2e38;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
     }
-
-    .title {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .note {
-      font-size: 14px;
-      color: #8b93a1;
-      margin-top: 2px;
-    }
-
-    .delete {
-      background: none;
+    .add-box input:focus, .add-box select:focus { outline: none; border-color: #6c8cff; }
+    .add-box button {
+      width: 100%;
+      background: #6c8cff;
+      color: #0f1115;
       border: none;
-      color: #8b93a1;
-      font-size: 22px;
-      padding: 4px 8px;
-    }
-
-    .empty {
-      text-align: center;
-      color: #8b93a1;
-      padding: 24px 0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -132,114 +131,351 @@
   <div class="app">
     <header>
       <h1>Моё расписание</h1>
-      <p>Сегодня</p>
+      <p id="dateText"></p>
     </header>
 
+    <div class="banner">
+      <div class="b-label" id="bLabel"></div>
+      <div class="b-big" id="bBig"></div>
+      <div class="b-sub" id="bSub1"></div>
+      <div class="b-sub2" id="bSub2"></div>
+    </div>
+
+    <div class="notif" id="notifBox">
+      <button id="enableBtn" onclick="enableNotif()">🔔 Включить уведомления</button>
+      <button id="testBtn" onclick="testNotif()" style="display:none">Проверить</button>
+      <span id="notifHint"></span>
+      <select id="leadSelect" onchange="changeLead()">
+        <option value="5">за 5 мин</option>
+        <option value="10">за 10 мин</option>
+        <option value="15">за 15 мин</option>
+        <option value="30">за 30 мин</option>
+      </select>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <div id="list"></div>
+
     <div class="add-box">
-      <input type="time" id="timeInput" value="09:00">
+      <h2>Добавить занятие</h2>
+      <label for="dayInput">День недели</label>
+      <select id="dayInput">
+        <option value="1">Понедельник</option>
+        <option value="2">Вторник</option>
+        <option value="3">Среда</option>
+        <option value="4">Четверг</option>
+        <option value="5">Пятница</option>
+        <option value="6">Суббота</option>
+        <option value="0">Воскресенье</option>
+      </select>
+      <div class="row">
+        <div>
+          <label for="startInput">Начало</label>
+          <input type="time" id="startInput" value="09:00">
+        </div>
+        <div>
+          <label for="endInput">Конец</label>
+          <input type="time" id="endInput" value="10:30">
+        </div>
+      </div>
       <input type="text" id="titleInput" placeholder="Название (например, Математика)">
       <input type="text" id="noteInput" placeholder="Заметка (необязательно)">
       <button onclick="addLesson()">Добавить занятие</button>
     </div>
-
-    <div id="list"></div>
   </div>
 
   <script>
-    // Занятия, которые показываются при самом первом запуске
-    const defaultLessons = [
-      { time: "09:00", title: "Математика", note: "Аудитория 204" },
-      { time: "11:30", title: "Английский язык", note: "Онлайн" },
-      { time: "18:00", title: "Тренировка", note: "Спортзал" }
+    var DAY_NAMES = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    var DAY_FULL = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+    var ORDER = [1, 2, 3, 4, 5, 6, 0];
+    var colors = ["", "green", "pink"];
+
+    // ---------- Память ----------
+    function load(key, fallback) {
+      try {
+        var s = localStorage.getItem(key);
+        if (s !== null) return JSON.parse(s);
+      } catch (e) {}
+      return fallback;
+    }
+    function save(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+    }
+
+    // ---------- Данные ----------
+    var todayNum = new Date().getDay();
+    var defaultLessons = [
+      { id: 1, day: todayNum, start: "09:00", end: "10:30", title: "Математика", note: "Аудитория 204" },
+      { id: 2, day: todayNum, start: "11:30", end: "13:00", title: "Английский язык", note: "Онлайн" },
+      { id: 3, day: todayNum, start: "18:00", end: "19:30", title: "Тренировка", note: "Спортзал" }
     ];
 
-    // Загружает сохранённый список из памяти браузера
-    function loadLessons() {
-      try {
-        const saved = localStorage.getItem("lessons");
-        if (saved !== null) {
-          return JSON.parse(saved);
-        }
-      } catch (e) {
-        // если память недоступна, просто покажем стандартный список
-      }
-      return defaultLessons;
-    }
+    var lessons = load("lessons2", defaultLessons);
+    if (!Array.isArray(lessons)) lessons = defaultLessons;
+    var lead = Number(load("lead", 10));
+    var selectedDay = todayNum;
 
-    // Сохраняет список в память браузера
-    function saveLessons() {
-      try {
-        localStorage.setItem("lessons", JSON.stringify(lessons));
-      } catch (e) {
-        // если сохранить не получилось, приложение всё равно работает
-      }
-    }
-
-    // Защита: превращает опасные символы в обычный текст
+    // ---------- Помощники ----------
     function safe(text) {
-      const div = document.createElement("div");
+      var div = document.createElement("div");
       div.textContent = text;
       return div.innerHTML;
     }
+    function toMin(t) {
+      var p = String(t).split(":");
+      return Number(p[0]) * 60 + Number(p[1]);
+    }
+    function fmtDur(min) {
+      if (min < 1) return "меньше минуты";
+      var h = Math.floor(min / 60);
+      var m = min % 60;
+      if (h === 0) return m + " мин";
+      return h + " ч " + m + " мин";
+    }
+    function lessonsOf(day) {
+      return lessons
+        .filter(function (l) { return l.day === day; })
+        .sort(function (a, b) { return a.start.localeCompare(b.start); });
+    }
+    function isNow(l) {
+      var n = new Date();
+      if (n.getDay() !== l.day) return false;
+      var m = n.getHours() * 60 + n.getMinutes();
+      return m >= toMin(l.start) && m < toMin(l.end);
+    }
 
-    let lessons = loadLessons();
-
-    const colors = ["", "green", "pink"];
-
-    function render() {
-      const list = document.getElementById("list");
-      list.innerHTML = "";
-
-      lessons.sort(function (a, b) {
-        return a.time.localeCompare(b.time);
-      });
-
-      if (lessons.length === 0) {
-        list.innerHTML = '<div class="empty">Занятий пока нет</div>';
-        return;
-      }
-
-      lessons.forEach(function (lesson, i) {
-        list.innerHTML +=
-          '<div class="card ' + colors[i % 3] + '">' +
-            '<div class="time">' + safe(lesson.time) + '</div>' +
-            '<div class="info">' +
-              '<div class="title">' + safe(lesson.title) + '</div>' +
-              '<div class="note">' + safe(lesson.note) + '</div>' +
-            '</div>' +
-            '<button class="delete" onclick="removeLesson(' + i + ')">✕</button>' +
-          '</div>';
+    // ---------- Вкладки и список ----------
+    function renderTabs() {
+      var box = document.getElementById("tabs");
+      box.innerHTML = "";
+      ORDER.forEach(function (d) {
+        var b = document.createElement("button");
+        b.textContent = DAY_NAMES[d];
+        b.className = "tab" + (d === selectedDay ? " active" : "") + (d === todayNum ? " today" : "");
+        b.onclick = function () {
+          selectedDay = d;
+          document.getElementById("dayInput").value = d;
+          renderTabs();
+          renderList();
+        };
+        box.appendChild(b);
       });
     }
 
-    function addLesson() {
-      const time = document.getElementById("timeInput").value;
-      const title = document.getElementById("titleInput").value.trim();
-      const note = document.getElementById("noteInput").value.trim();
+    function renderList() {
+      var list = document.getElementById("list");
+      list.innerHTML = "";
+      var items = lessonsOf(selectedDay);
 
-      if (time === "" || title === "") {
-        alert("Укажите время и название");
+      if (items.length === 0) {
+        list.innerHTML = '<div class="empty">В этот день занятий нет</div>';
         return;
       }
 
-      lessons.push({ time: time, title: title, note: note });
-      saveLessons();
+      items.forEach(function (l, i) {
+        var card = document.createElement("div");
+        card.className = "card " + colors[i % 3] + (isNow(l) ? " now" : "");
+        card.innerHTML =
+          '<div class="time"><div class="t1">' + safe(l.start) + '</div><div class="t2">' + safe(l.end) + '</div></div>' +
+          '<div class="info"><div class="title">' + safe(l.title) + '</div>' +
+          (l.note ? '<div class="note">' + safe(l.note) + '</div>' : '') + '</div>';
+        var del = document.createElement("button");
+        del.className = "delete";
+        del.textContent = "✕";
+        del.onclick = function () { removeLesson(l.id); };
+        card.appendChild(del);
+        list.appendChild(card);
+      });
+    }
+
+    // ---------- Плашка «До звонка» ----------
+    function updateBanner() {
+      var now = new Date();
+      var nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+      var day = now.getDay();
+      var todays = lessonsOf(day);
+
+      var current = null;
+      var next = null;
+      todays.forEach(function (l) {
+        var s = toMin(l.start);
+        var e = toMin(l.end);
+        if (nowMin >= s && nowMin < e) {
+          current = l;
+        } else if (s > nowMin && !next) {
+          next = l;
+        }
+      });
+
+      var label = document.getElementById("bLabel");
+      var big = document.getElementById("bBig");
+      var sub1 = document.getElementById("bSub1");
+      var sub2 = document.getElementById("bSub2");
+
+      if (current) {
+        label.textContent = "До конца пары";
+        big.textContent = fmtDur(Math.ceil(toMin(current.end) - nowMin));
+        sub1.textContent = "Идёт: " + current.title + " · " + current.start + "–" + current.end;
+        sub2.textContent = next
+          ? "Дальше: " + next.title + " в " + next.start
+          : "Это последняя пара на сегодня";
+      } else if (next) {
+        label.textContent = "До начала пары";
+        big.textContent = fmtDur(Math.ceil(toMin(next.start) - nowMin));
+        sub1.textContent = "Следующая пара: " + next.title + " · " + next.start + "–" + next.end;
+        sub2.textContent = next.note || "";
+      } else {
+        label.textContent = todays.length ? "Сегодня пар больше нет" : "Сегодня занятий нет";
+        big.textContent = "Свободно";
+        var found = null;
+        for (var i = 1; i <= 7 && !found; i++) {
+          var d = (day + i) % 7;
+          var arr = lessonsOf(d);
+          if (arr.length) found = { d: d, l: arr[0], i: i };
+        }
+        if (found) {
+          var when = found.i === 1 ? "Завтра" : DAY_FULL[found.d];
+          sub1.textContent = "Ближайшая пара: " + when + ", " + found.l.start + " · " + found.l.title;
+        } else {
+          sub1.textContent = "Добавьте занятия внизу страницы";
+        }
+        sub2.textContent = "";
+      }
+
+      checkNotify(nowMin, todays);
+    }
+
+    // ---------- Уведомления ----------
+    function showNote(title, body) {
+      var opts = { body: body, icon: "icon-192.png", badge: "icon-192.png", tag: "lesson", vibrate: [200, 100, 200] };
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready
+          .then(function (reg) { reg.showNotification(title, opts); })
+          .catch(function () { try { new Notification(title, opts); } catch (e) {} });
+      } else {
+        try { new Notification(title, opts); } catch (e) {}
+      }
+    }
+
+    function checkNotify(nowMin, todays) {
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+      var dateKey = new Date().toDateString();
+      var notified = load("notified", {});
+      var changed = false;
+
+      Object.keys(notified).forEach(function (k) {
+        if (notified[k] !== dateKey) { delete notified[k]; changed = true; }
+      });
+
+      todays.forEach(function (l) {
+        var diff = toMin(l.start) - nowMin;
+        if (diff > 0 && diff <= lead && !notified[l.id]) {
+          notified[l.id] = dateKey;
+          changed = true;
+          showNote(
+            "Через " + fmtDur(Math.ceil(diff)) + ": " + l.title,
+            l.start + "–" + l.end + (l.note ? " · " + l.note : "")
+          );
+        }
+      });
+
+      if (changed) save("notified", notified);
+    }
+
+    function updateNotifUI() {
+      var enableBtn = document.getElementById("enableBtn");
+      var testBtn = document.getElementById("testBtn");
+      var hint = document.getElementById("notifHint");
+
+      if (!("Notification" in window)) {
+        document.getElementById("notifBox").style.display = "none";
+        return;
+      }
+      if (Notification.permission === "granted") {
+        enableBtn.style.display = "none";
+        testBtn.style.display = "inline-block";
+        hint.textContent = "🔔 Напоминать";
+      } else if (Notification.permission === "denied") {
+        enableBtn.style.display = "none";
+        testBtn.style.display = "none";
+        hint.textContent = "Уведомления запрещены. Разрешите их в настройках Chrome для этого сайта.";
+      } else {
+        enableBtn.style.display = "inline-block";
+        testBtn.style.display = "none";
+        hint.textContent = "Напоминать";
+      }
+    }
+
+    function enableNotif() {
+      Notification.requestPermission().then(updateNotifUI);
+    }
+    function testNotif() {
+      showNote("Проверка уведомлений", "Если вы это видите, напоминания работают");
+    }
+    function changeLead() {
+      lead = Number(document.getElementById("leadSelect").value);
+      save("lead", lead);
+    }
+
+    // ---------- Добавление и удаление ----------
+    function addLesson() {
+      var day = Number(document.getElementById("dayInput").value);
+      var start = document.getElementById("startInput").value;
+      var end = document.getElementById("endInput").value;
+      var title = document.getElementById("titleInput").value.trim();
+      var note = document.getElementById("noteInput").value.trim();
+
+      if (start === "" || end === "" || title === "") {
+        alert("Укажите начало, конец и название");
+        return;
+      }
+      if (toMin(end) <= toMin(start)) {
+        alert("Конец должен быть позже начала");
+        return;
+      }
+
+      lessons.push({ id: Date.now(), day: day, start: start, end: end, title: title, note: note });
+      save("lessons2", lessons);
 
       document.getElementById("titleInput").value = "";
       document.getElementById("noteInput").value = "";
-      render();
+      selectedDay = day;
+      renderTabs();
+      renderList();
+      updateBanner();
     }
 
-    function removeLesson(index) {
-      lessons.splice(index, 1);
-      saveLessons();
-      render();
+    function removeLesson(id) {
+      lessons = lessons.filter(function (l) { return l.id !== id; });
+      save("lessons2", lessons);
+      renderList();
+      updateBanner();
     }
 
-    render();
-        if ("serviceWorker" in navigator) {
+    // ---------- Запуск ----------
+    function tick() {
+      updateBanner();
+      renderList();
+    }
+
+    var dateStr = new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
+    document.getElementById("dateText").textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    document.getElementById("dayInput").value = selectedDay;
+    document.getElementById("leadSelect").value = String(lead);
+
+    renderTabs();
+    renderList();
+    updateBanner();
+    updateNotifUI();
+
+    setInterval(tick, 10000);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) tick();
+    });
+
+    if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
-        }
+    }
   </script>
 </body>
 </html>
